@@ -12,11 +12,14 @@ BagliListe* DugumOlustur(int deger)
 
     yeni_dugum = (BagliListe*) malloc(sizeof(BagliListe));
 
-    if (yeni_dugum != NULL)
+    if (yeni_dugum == NULL)
     {
-        yeni_dugum->deger = deger;
-        yeni_dugum->sonraki_eleman = NULL;
+        printf("Malloc basarisiz.");
+        exit(EXIT_FAILURE);
     }
+
+    yeni_dugum->deger = deger;
+    yeni_dugum->sonraki_eleman = NULL;
 
     return yeni_dugum;
 }
@@ -104,16 +107,16 @@ void ListeYazdir(BagliListe* liste_basi)
     if (liste_basi == NULL)
     {
         printf("Liste bos.\n");
+        return;
     }
-    else
-    {   
-        while (liste_basi != NULL)
-        {
-            printf("Adres:%p ", liste_basi);
-            printf("%d\n", liste_basi->deger);
-            liste_basi = liste_basi->sonraki_eleman;
-        }
+    while (liste_basi != NULL)
+    {
+        printf("Adres:%p ", liste_basi);
+        printf("%d\n", liste_basi->deger);
+        liste_basi = liste_basi->sonraki_eleman;
     }
+
+    return;
 }
 
 void KucukDegerleriSil(BagliListe** liste_basi, int buyuk_deger)
@@ -232,7 +235,7 @@ void TekCiftListeBol(BagliListe** bolunen_liste, BagliListe** tekli_liste)
     return; // WIP
 }
 
-void ArtanSıralıDegerEkle(BagliListe** liste_basi, int eklenen_deger) {
+void ArtanSiraliDegerEkle(BagliListe** liste_basi, int eklenen_deger) {
     BagliListe* onceki_eleman = NULL;
     BagliListe* simdiki_eleman = *liste_basi;
     BagliListe* eklenecek_eleman = DugumOlustur(eklenen_deger);
@@ -338,10 +341,8 @@ void RecursiveListeYaz(BagliListe* liste_basi) {
         printf("%3d", liste_basi->deger);
         RecursiveListeYaz(liste_basi->sonraki_eleman);
     }
-    else
-    {
-        printf("\n");
-    }
+
+    return;
 }
 
 void TerstenRecursiveListeYaz(BagliListe* liste_basi) {
@@ -350,6 +351,8 @@ void TerstenRecursiveListeYaz(BagliListe* liste_basi) {
         TerstenRecursiveListeYaz(liste_basi->sonraki_eleman);
         printf("%3d", liste_basi->deger);
     }
+
+    return;
 }
 
 void ListeSil(BagliListe** liste_basi)
@@ -362,6 +365,8 @@ void ListeSil(BagliListe** liste_basi)
         *liste_basi = (*liste_basi)->sonraki_eleman;
         free(silinen_eleman);
     }
+
+    return;
 }
 
 void ListeTersCevir(BagliListe** liste_basi)
@@ -382,6 +387,8 @@ void ListeTersCevir(BagliListe** liste_basi)
         *liste_basi = simdiki_eleman;
     }
     *liste_basi = onceki_eleman;
+
+    return;
 }
 
 int DegerlerArdisikMi(BagliListe* liste_basi, int ilk_deger, int ikinci_deger)
@@ -398,11 +405,11 @@ int DegerlerArdisikMi(BagliListe* liste_basi, int ilk_deger, int ikinci_deger)
         ilk_eleman = liste_basi;
         liste_basi = liste_basi->sonraki_eleman;
     }
-    
     if (liste_basi != NULL && (ilk_eleman->deger + 1 == ikinci_deger || ilk_eleman->deger - 1 == ikinci_deger))
     {
         return 1;
     }
+
     return 0;
 }
 
@@ -421,6 +428,7 @@ void ListeBirlestir(BagliListe** yeni_liste, BagliListe** eklenecek_liste) {
     }
     simdiki_eleman->sonraki_eleman = *eklenecek_liste;
     *eklenecek_liste = NULL;
+
     return;
 }
 
