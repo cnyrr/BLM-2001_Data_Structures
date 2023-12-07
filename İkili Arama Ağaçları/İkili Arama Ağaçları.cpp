@@ -1,16 +1,14 @@
 ﻿#include <iostream>
 
 #define SENTINEL -1000000
-// WIP
 
-// Bitmedi
 struct IAA {
 	int deger;
 	struct IAA* sol_eleman;
 	struct IAA* sag_eleman;
 };
 
-IAA* DugumOlustur(int deger) {
+IAA* IAADugumOlustur(int deger) {
 	IAA* yeni_dugum = (IAA*)malloc(sizeof(IAA));
 
 	if (yeni_dugum == NULL)
@@ -29,7 +27,7 @@ void IAAEkle(IAA** kok, int deger)
 {
 	IAA* onceki_dugum = *kok;
 	IAA* simdiki_dugum = *kok;
-	IAA* yeni_dugum = DugumOlustur(deger);
+	IAA* yeni_dugum = IAADugumOlustur(deger);
 	int sag_tarafa = 0;
 
 	if (simdiki_dugum == NULL)
@@ -73,161 +71,46 @@ void IAAEkle(IAA** kok, int deger)
 	return;
 }
 
-void InOrderYazdir(IAA* kok) {
+void IAAInOrderYazdir(IAA* kok) {
 	if (kok == NULL)
 	{
 		return;
 	}
-	InOrderYazdir(kok->sol_eleman);
+	IAAInOrderYazdir(kok->sol_eleman);
 	printf("%4d", kok->deger);
-	InOrderYazdir(kok->sag_eleman);
+	IAAInOrderYazdir(kok->sag_eleman);
 	return;
 }
 
-void PreOrderYazdir(IAA* kok) {
+void IAAPreOrderYazdir(IAA* kok) {
 	if (kok == NULL)
 	{
 		return;
 	}
 	printf("%4d", kok->deger);
-	PreOrderYazdir(kok->sol_eleman);
-	PreOrderYazdir(kok->sag_eleman);
+	IAAPreOrderYazdir(kok->sol_eleman);
+	IAAPreOrderYazdir(kok->sag_eleman);
 	return;
 }
 
-void PostOrderYazdir(IAA* kok) {
+void IAAPostOrderYazdir(IAA* kok) {
 	if (kok == NULL)
 	{
 		return;
 	}
-	PostOrderYazdir(kok->sol_eleman);
-	PostOrderYazdir(kok->sag_eleman);
+	IAAPostOrderYazdir(kok->sol_eleman);
+	IAAPostOrderYazdir(kok->sag_eleman);
 	printf("%4d", kok->deger);
 	return;
 }
 
-void DugumSil(IAA** kok, int deger)
-{
-	IAA* onceki_dugum = NULL;
-	IAA* kontrol_edilen_dugum = *kok;
-	int sag_tarafa = 0;
-
-	if (*kok== NULL)
-	{
-		return;
-	}
-
-	while (kontrol_edilen_dugum != NULL)
-	{
-		if (deger < kontrol_edilen_dugum->deger)
-		{
-			sag_tarafa = 0;
-			onceki_dugum = kontrol_edilen_dugum;
-			kontrol_edilen_dugum = kontrol_edilen_dugum->sol_eleman;
-		}
-		else if (deger > kontrol_edilen_dugum->deger)
-		{
-			sag_tarafa = 1;
-			onceki_dugum = kontrol_edilen_dugum;
-			kontrol_edilen_dugum = kontrol_edilen_dugum->sag_eleman;
-		}
-		else
-		{
-			break;
-		}
-	}
-	
-	if (kontrol_edilen_dugum == NULL)
-	{
-		return;
-	}
-
-	if (kontrol_edilen_dugum->sag_eleman == NULL)
-	{
-		if (onceki_dugum == NULL)
-		{
-			if (sag_tarafa)
-			{
-				*kok = kontrol_edilen_dugum->sol_eleman;
-			}
-			else
-			{
-				*kok = kontrol_edilen_dugum->sol_eleman;
-			}
-		}
-		else
-		{
-			if (sag_tarafa)
-			{
-				onceki_dugum->sag_eleman = kontrol_edilen_dugum->sol_eleman;
-			}
-			else
-			{
-				onceki_dugum->sol_eleman = kontrol_edilen_dugum->sol_eleman;
-			}
-		}
-	}
-	else if (kontrol_edilen_dugum->sol_eleman == NULL)
-	{
-		if (onceki_dugum == NULL)
-		{
-			if (sag_tarafa)
-			{
-				*kok = kontrol_edilen_dugum->sag_eleman;
-			}
-			else
-			{
-				*kok = kontrol_edilen_dugum->sag_eleman;
-			}
-		}
-		else {
-			if (sag_tarafa)
-			{
-				onceki_dugum->sag_eleman = kontrol_edilen_dugum->sag_eleman;
-			}
-			else
-			{
-				onceki_dugum->sol_eleman = kontrol_edilen_dugum->sag_eleman;
-			}
-		}
-	}
-	else
-	{
-		IAA* degisen_onceki_eleman = kontrol_edilen_dugum;
-		IAA* degistirilecek_eleman = kontrol_edilen_dugum->sag_eleman;
-
-		while (degistirilecek_eleman->sol_eleman != NULL)
-		{
-			degisen_onceki_eleman = degistirilecek_eleman;
-			degistirilecek_eleman = degistirilecek_eleman->sol_eleman;
-		}
-
-		if (onceki_dugum == NULL)
-		{
-			degisen_onceki_eleman->sol_eleman = degistirilecek_eleman->sag_eleman;
-			degistirilecek_eleman->sag_eleman = (*kok)->sag_eleman;
-			degistirilecek_eleman->sol_eleman = (*kok)->sol_eleman;
-			*kok = degistirilecek_eleman;
-		}
-		else
-		{
-			onceki_dugum->sol_eleman = degistirilecek_eleman;
-			degisen_onceki_eleman->sol_eleman = degistirilecek_eleman->sag_eleman;
-			degistirilecek_eleman->sag_eleman = kontrol_edilen_dugum->sag_eleman;
-			degistirilecek_eleman->sol_eleman = kontrol_edilen_dugum->sol_eleman;
-		}
-
-	}
-
-	free(kontrol_edilen_dugum);
-}
-
-void AgacBuda(IAA** kok, int anahtar)
+void IAAElemanSil(IAA** kok, int anahtar)
 {
 	if (*kok == NULL)
 	{
 		return;
 	}
+
 	IAA* onceki_eleman = NULL;
 	IAA* simdiki_eleman = *kok;
 	int soldan_mi = 0;
@@ -263,16 +146,13 @@ void AgacBuda(IAA** kok, int anahtar)
 		{
 			*kok = simdiki_eleman->sol_eleman;
 		}
+		else if (soldan_mi)
+		{
+			onceki_eleman->sol_eleman = simdiki_eleman->sol_eleman;
+		}
 		else
 		{
-			if (soldan_mi)
-			{
-				onceki_eleman->sol_eleman = simdiki_eleman->sol_eleman;
-			}
-			else
-			{
-				onceki_eleman->sag_eleman = simdiki_eleman->sol_eleman;
-			}
+			onceki_eleman->sag_eleman = simdiki_eleman->sol_eleman;
 		}
 	}
 	else if (simdiki_eleman->sol_eleman == NULL)
@@ -281,52 +161,46 @@ void AgacBuda(IAA** kok, int anahtar)
 		{
 			*kok = simdiki_eleman->sag_eleman;
 		}
+		else if (soldan_mi)
+		{
+			onceki_eleman->sol_eleman = simdiki_eleman->sag_eleman;
+		}
 		else
 		{
-			if (soldan_mi)
-			{
-				onceki_eleman->sol_eleman = simdiki_eleman->sag_eleman;
-			}
-			else
-			{
-				onceki_eleman->sag_eleman = simdiki_eleman->sag_eleman;
-			}
+			onceki_eleman->sag_eleman = simdiki_eleman->sag_eleman;
 		}
 	}
 	else
 	{
-		IAA* en_soldan_onceki_eleman = simdiki_eleman;
-		IAA* en_soldaki_eleman = simdiki_eleman->sag_eleman;
+		IAA* degisenden_onceki_eleman = simdiki_eleman;
+		IAA* degisecek_eleman = simdiki_eleman->sag_eleman;
 
-		while (en_soldaki_eleman->sol_eleman != NULL)
+		while (degisecek_eleman->sol_eleman != NULL)
 		{
-			en_soldan_onceki_eleman = en_soldaki_eleman;
-			en_soldaki_eleman = en_soldaki_eleman->sol_eleman;
+			degisenden_onceki_eleman = degisecek_eleman;
+			degisecek_eleman = degisecek_eleman->sol_eleman;
 		}
-		if (en_soldan_onceki_eleman != simdiki_eleman)
-		{
-			en_soldan_onceki_eleman->sol_eleman = en_soldaki_eleman->sag_eleman;
-			en_soldaki_eleman->sag_eleman = simdiki_eleman->sag_eleman;
-		}
-		en_soldaki_eleman->sol_eleman = simdiki_eleman->sol_eleman;
 
-		if (onceki_eleman == NULL)
+		degisenden_onceki_eleman->sol_eleman = degisecek_eleman->sag_eleman;
+		degisecek_eleman->sol_eleman = simdiki_eleman->sol_eleman;
+		degisecek_eleman->sag_eleman = simdiki_eleman->sag_eleman;
+
+		if (simdiki_eleman == *kok)
 		{
-			*kok = en_soldaki_eleman;
+			*kok = degisecek_eleman;
 		}
-		else { 
-			/*if //(soldan_mi == 1)
-			{
-				onceki_eleman->sol_eleman = en_soldaki_eleman;
-			}
-			else*/
-			{
-				onceki_eleman->sag_eleman = en_soldaki_eleman;
-			}
-			
+		else if (soldan_mi)
+		{
+			onceki_eleman->sol_eleman = degisecek_eleman;
+		}
+		else
+		{
+			onceki_eleman->sag_eleman = degisecek_eleman;
 		}
 	}
 	free(simdiki_eleman);
+
+	return;
 }
 
 int IAAMi(IAA* kok, IAA* aranan_dugum) 
@@ -369,7 +243,7 @@ int IAAMi(IAA* kok, IAA* aranan_dugum)
 
 }
 
-int DugumSayisi(IAA* kok)
+int IAADugumSayisi(IAA* kok)
 {
 	if (kok == NULL)
 	{
@@ -377,11 +251,11 @@ int DugumSayisi(IAA* kok)
 	}
 	else
 	{
-		return 1 + DugumSayisi(kok->sag_eleman) + DugumSayisi(kok->sol_eleman);
+		return 1 + IAADugumSayisi(kok->sag_eleman) + IAADugumSayisi(kok->sol_eleman);
 	}
 }
 
-int YaprakSayisi(IAA* kok)
+int IAAYaprakSayisi(IAA* kok)
 {
 	if (kok == NULL)
 	{
@@ -393,11 +267,11 @@ int YaprakSayisi(IAA* kok)
 	}
 	else
 	{
-		return YaprakSayisi(kok->sag_eleman) + YaprakSayisi(kok->sol_eleman);
+		return IAAYaprakSayisi(kok->sag_eleman) + IAAYaprakSayisi(kok->sol_eleman);
 	}
 }
 
-int IcDugumSayisi(IAA* kok)
+int IAAIcDugumSayisi(IAA* kok)
 {
 	if (kok == NULL)
 	{
@@ -408,7 +282,7 @@ int IcDugumSayisi(IAA* kok)
 		return 0;
 	}
 	{
-		return 1 + IcDugumSayisi(kok->sag_eleman) + IcDugumSayisi(kok->sol_eleman);
+		return 1 + IAAIcDugumSayisi(kok->sag_eleman) + IAAIcDugumSayisi(kok->sol_eleman);
 	}
 }
 
@@ -427,7 +301,7 @@ void IAASil(IAA** kok)
 	}
 }
 
-int EnKisaYol(IAA* kok)
+int IAAEnKisaYol(IAA* kok)
 {
 	int sagdan, soldan, kisa_yol, uzun_yol;
 
@@ -435,8 +309,8 @@ int EnKisaYol(IAA* kok)
 	{
 		return 0;
 	}
-	sagdan = EnKisaYol(kok->sag_eleman);
-	soldan = EnKisaYol(kok->sol_eleman);
+	sagdan = IAAEnKisaYol(kok->sag_eleman);
+	soldan = IAAEnKisaYol(kok->sol_eleman);
 
 	if (sagdan > soldan)
 	{
@@ -456,9 +330,39 @@ int EnKisaYol(IAA* kok)
 	return uzun_yol + 1;
 }
 
-void IAADengeliMi()
+int IAADengeliMi(IAA* agac_koku, IAA* kontrol_edilecek_dugum)
 {
-	// Agaç dengeli mi ?
+	if (kontrol_edilecek_dugum == NULL)
+	{
+		return 1;
+	}
+
+	int sol_yol = IAADengeliMi(agac_koku, kontrol_edilecek_dugum->sol_eleman);
+	int sag_yol = IAADengeliMi(agac_koku, kontrol_edilecek_dugum->sag_eleman);
+
+	if (sol_yol == 0 || sag_yol == 0)
+	{
+		return 0;
+	}
+
+	if (sol_yol - sag_yol > 1 || sag_yol - sol_yol > 1)
+	{
+		return 0;
+	}
+
+	if (agac_koku == kontrol_edilecek_dugum)
+	{
+		return 1;
+	}
+
+	if (sol_yol > sag_yol)
+	{
+		return sol_yol + 1;
+	}
+	else
+	{
+		return sag_yol + 1;
+	}
 }
 
 int IAADugumDedesi(IAA* agac_koku, int deger)
@@ -495,26 +399,27 @@ int IAADugumDedesi(IAA* agac_koku, int deger)
 	return dede->deger;
 
 }
+
 int main()
 {
-	IAA* agac_koku = DugumOlustur(70);
-	IAAEkle(&agac_koku, 60);
+	IAA* agac_koku = NULL;
+	IAAEkle(&agac_koku, 100);
 	IAAEkle(&agac_koku, 50);
-	IAAEkle(&agac_koku, 32);
-	IAAEkle(&agac_koku, 35);
-	IAAEkle(&agac_koku, 55);
-	IAAEkle(&agac_koku, 80);
+	IAAEkle(&agac_koku, 200);
+	IAAEkle(&agac_koku, 25);
 	IAAEkle(&agac_koku, 75);
-	IAAEkle(&agac_koku, 73);
-	IAAEkle(&agac_koku, 78);
-	printf("Dede: %4d Torun: %4d\n", IAADugumDedesi(agac_koku, 55), 55);
-	printf("Dede: %4d Torun: %4d\n", IAADugumDedesi(agac_koku, 35), 35);
-	printf("Dede: %4d Torun: %4d\n", IAADugumDedesi(agac_koku, 70), 70);
-	printf("Dede: %4d Torun: %4d\n", IAADugumDedesi(agac_koku, 60), 60);
-	printf("Dede: %4d Torun: %4d\n", IAADugumDedesi(agac_koku, 50), 50);
-	printf("Dede: %4d Torun: %4d\n", IAADugumDedesi(agac_koku, 90), 90);
-	printf("Dede: %4d Torun: %4d\n", IAADugumDedesi(agac_koku, 33), 33);
-	
-
+	IAAEkle(&agac_koku, 150);
+	IAAEkle(&agac_koku, 250);
+	printf("Agac dengeli mi?\nDondu: %d\n", IAADengeliMi(agac_koku, agac_koku));
+	IAAPreOrderYazdir(agac_koku);
+	IAAElemanSil(&agac_koku, 100);
+	printf("\n\n \"100\" degeri silindi peki simdi dengeli mi?\nDondu: %d\n", IAADengeliMi(agac_koku, agac_koku));
+	IAAPreOrderYazdir(agac_koku);
+	IAAElemanSil(&agac_koku, 250);
+	printf("\n\n \"250\" degeri silindi peki simdi dengeli mi?\nDondu: %d\n", IAADengeliMi(agac_koku, agac_koku));
+	IAAPreOrderYazdir(agac_koku);
+	IAAElemanSil(&agac_koku, 200);
+	printf("\n\n \"200\" degeri silindi peki simdi dengeli mi?\nDondu: %d\n", IAADengeliMi(agac_koku, agac_koku));
+	IAAPreOrderYazdir(agac_koku);
 }
 
