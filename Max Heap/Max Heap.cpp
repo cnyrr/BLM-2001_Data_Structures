@@ -154,20 +154,25 @@ void xheapMaxSil(xheap* heap)
 
 void xheapDuzelt(xheap* heap)
 {
-    // Diğer adıyla heapify.
     for (int i = 0; i < ((heap->eleman_sayisi - 2) / 2) + 1; i++)
     {
         xheapBubleDown(heap, ((heap->eleman_sayisi - 1) / 2) - i);
     }
+
     return;
 }
 
 void xheapSort(xheap* heap)
 {
-    for (int a = 0; a < heap->eleman_sayisi - 2; a++)
-    {
+    int tekrar = heap->eleman_sayisi - 1;
 
+    for (int sayac = 0; sayac < tekrar; sayac++)
+    {
+        xheapMaxSil(heap);
     }
+    heap->eleman_sayisi = tekrar + 1;
+
+    return;
 }
 
 int main()
@@ -186,8 +191,9 @@ int main()
     xheapYazdir(heap);
     xheapMaxSil(heap);
     xheapYazdir(heap);
-
-    // bozuk heap      -> 25, 30, 40, 70, 60, 75, 80
-    // heapify sonrası -> 80, 70, 75, 30, 60, 25, 40
+    xheapSort(heap);
+    xheapYazdir(heap);
+    xheapDuzelt(heap);
+    xheapYazdir(heap);
 }
 
