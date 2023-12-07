@@ -6,7 +6,7 @@ struct BagliListe
     BagliListe* sonraki_eleman;
 };
 
-BagliListe* DugumOlustur(int deger)
+BagliListe* ListeDugumOlustur(int deger)
 {
     BagliListe* yeni_dugum = NULL;
 
@@ -26,12 +26,12 @@ BagliListe* DugumOlustur(int deger)
 
 void ListeOlustur(BagliListe** yeni_dugum, int deger)
 {
-    *yeni_dugum = DugumOlustur(deger);
+    *yeni_dugum = ListeDugumOlustur(deger);
 
     return;
 }
 
-void DegeriDegistir(BagliListe* degisen_eleman, int yeni_deger) 
+void ListeDegeriDegistir(BagliListe* degisen_eleman, int yeni_deger) 
 {
     if (degisen_eleman != NULL) 
     {
@@ -40,9 +40,9 @@ void DegeriDegistir(BagliListe* degisen_eleman, int yeni_deger)
     return;
 }
 
-void BasaDegerEkle(BagliListe** liste_basi, int deger)
+void ListeBasaDegerEkle(BagliListe** liste_basi, int deger)
 {
-    BagliListe* yeni_liste_basi = DugumOlustur(deger);
+    BagliListe* yeni_liste_basi = ListeDugumOlustur(deger);
 
     yeni_liste_basi->sonraki_eleman = *liste_basi;
     *liste_basi = yeni_liste_basi;
@@ -50,13 +50,13 @@ void BasaDegerEkle(BagliListe** liste_basi, int deger)
     return;
 }
 
-void SonaDegerEkle(BagliListe** liste_basi, int deger)
+void ListeSonaDegerEkle(BagliListe** liste_basi, int deger)
 {
     BagliListe* simdiki_dugum = *liste_basi;
 
     if (simdiki_dugum == NULL)
     {
-        *liste_basi = DugumOlustur(deger);
+        *liste_basi = ListeDugumOlustur(deger);
     }
     else
     {
@@ -64,20 +64,20 @@ void SonaDegerEkle(BagliListe** liste_basi, int deger)
         {
             simdiki_dugum = simdiki_dugum->sonraki_eleman;
         }
-        simdiki_dugum->sonraki_eleman = DugumOlustur(deger);
+        simdiki_dugum->sonraki_eleman = ListeDugumOlustur(deger);
     }
 
     return;
 }
 
-void BasaDugumEkle(BagliListe** liste_basi, BagliListe* yeni_dugum)
+void ListeBasaDugumEkle(BagliListe** liste_basi, BagliListe* yeni_dugum)
 {
     yeni_dugum->sonraki_eleman = *liste_basi;
     *liste_basi = yeni_dugum;
     return;
 }
 
-void SonaDugumEkle(BagliListe** liste_basi, BagliListe* yeni_dugum)
+void ListeSonaDugumEkle(BagliListe** liste_basi, BagliListe* yeni_dugum)
 {
     BagliListe* simdiki_dugum = *liste_basi;
 
@@ -119,7 +119,7 @@ void ListeYazdir(BagliListe* liste_basi)
     return;
 }
 
-void KucukDegerleriSil(BagliListe** liste_basi, int buyuk_deger)
+void ListeKucukDegerleriSil(BagliListe** liste_basi, int buyuk_deger)
 {
     BagliListe* onceki_eleman = NULL;
     BagliListe* kontrol_edilen_eleman = *liste_basi;
@@ -150,7 +150,7 @@ void KucukDegerleriSil(BagliListe** liste_basi, int buyuk_deger)
     return;
 }
 
-void BuyukDegerleriSil(BagliListe** liste_basi, int kucuk_deger)
+void ListeBuyukDegerleriSil(BagliListe** liste_basi, int kucuk_deger)
 {
     BagliListe* onceki_eleman = NULL;
     BagliListe* kontrol_edilen_eleman = *liste_basi;
@@ -181,7 +181,7 @@ void BuyukDegerleriSil(BagliListe** liste_basi, int kucuk_deger)
     return;
 }
 
-void EsitDegerleriSil(BagliListe** liste_basi, int aranan_deger)
+void ListeEsitDegerleriSil(BagliListe** liste_basi, int aranan_deger)
 {
     BagliListe* onceki_eleman = NULL;
     BagliListe* kontrol_edilen_eleman = *liste_basi;
@@ -212,33 +212,60 @@ void EsitDegerleriSil(BagliListe** liste_basi, int aranan_deger)
     return;
 }
 
-void TekCiftListeOlustur(BagliListe* liste_basi, BagliListe** tekli_liste, BagliListe** ciftli_liste) {
+void ListeTekCiftOlustur(BagliListe* liste_basi, BagliListe** tekli_liste, BagliListe** ciftli_liste) {
     
     BagliListe* kontrol_edilen_eleman = liste_basi;
 
     while (kontrol_edilen_eleman != NULL)
     {
         if (kontrol_edilen_eleman->deger % 2 == 1) {
-            SonaDegerEkle(tekli_liste, kontrol_edilen_eleman->deger);
+            ListeSonaDegerEkle(tekli_liste, kontrol_edilen_eleman->deger);
         }
         else
         {
-            SonaDegerEkle(ciftli_liste, kontrol_edilen_eleman->deger);
+            ListeSonaDegerEkle(ciftli_liste, kontrol_edilen_eleman->deger);
         }
         kontrol_edilen_eleman = kontrol_edilen_eleman->sonraki_eleman;
     }
     return;
 }
 
-void TekCiftListeBol(BagliListe** bolunen_liste, BagliListe** tekli_liste)
+void ListeTekCiftBol(BagliListe** bolunen_liste, BagliListe** tekli_liste)
 {
-    return; // WIP
+    BagliListe* onceki_eleman = NULL;
+    BagliListe* siradaki_eleman = *bolunen_liste;
+
+    while (siradaki_eleman != NULL)
+    {
+        if (siradaki_eleman->deger % 2 != 0)
+        {
+            if (onceki_eleman == NULL)
+            {
+                *bolunen_liste = siradaki_eleman->sonraki_eleman;
+                ListeSonaDugumEkle(tekli_liste, siradaki_eleman);
+                siradaki_eleman = *bolunen_liste;
+            }
+            else
+            {
+                onceki_eleman->sonraki_eleman = siradaki_eleman->sonraki_eleman;
+                ListeSonaDugumEkle(tekli_liste, siradaki_eleman);
+                siradaki_eleman = onceki_eleman->sonraki_eleman;
+            }
+        }
+        else
+        {
+            onceki_eleman = siradaki_eleman;
+            siradaki_eleman = siradaki_eleman->sonraki_eleman;
+        }
+    }
+
+    return;
 }
 
-void ArtanSiraliDegerEkle(BagliListe** liste_basi, int eklenen_deger) {
+void ListeArtanSiraliDegerEkle(BagliListe** liste_basi, int eklenen_deger) {
     BagliListe* onceki_eleman = NULL;
     BagliListe* simdiki_eleman = *liste_basi;
-    BagliListe* eklenecek_eleman = DugumOlustur(eklenen_deger);
+    BagliListe* eklenecek_eleman = ListeDugumOlustur(eklenen_deger);
 
     while (simdiki_eleman != NULL && simdiki_eleman->deger <= eklenen_deger)
     {
@@ -259,7 +286,7 @@ void ArtanSiraliDegerEkle(BagliListe** liste_basi, int eklenen_deger) {
     return;
 }
 
-void ArtanSiraliElemanEkle(BagliListe** liste_basi, BagliListe* eklenen_eleman)
+void ListeArtanSiraliElemanEkle(BagliListe** liste_basi, BagliListe* eklenen_eleman)
 {
     BagliListe* onceki_eleman = NULL;
     BagliListe* simdiki_eleman = *liste_basi;
@@ -324,31 +351,31 @@ void ListeInsertSort(BagliListe** liste_basi) {
     return;
 }
 
-BagliListe* DiziyiListeYap(int* dizi_adresi, int dizi_uzunlugu)
+BagliListe* ListeDizidenCevir(int* dizi_adresi, int dizi_uzunlugu)
 {
     BagliListe* liste_basi = NULL;
 
     for (int i = dizi_uzunlugu - 1; i > -1; i--)
     {
-        BasaDegerEkle(&liste_basi, dizi_adresi[i]);
+        ListeBasaDegerEkle(&liste_basi, dizi_adresi[i]);
     }
     return liste_basi;
 }
 
-void RecursiveListeYaz(BagliListe* liste_basi) {
+void ListeRecursiveYaz(BagliListe* liste_basi) {
     if (liste_basi != NULL)
     {
         printf("%3d", liste_basi->deger);
-        RecursiveListeYaz(liste_basi->sonraki_eleman);
+        ListeRecursiveYaz(liste_basi->sonraki_eleman);
     }
 
     return;
 }
 
-void TerstenRecursiveListeYaz(BagliListe* liste_basi) {
+void ListeTerstenRecursiveYaz(BagliListe* liste_basi) {
     if (liste_basi != NULL)
     {   
-        TerstenRecursiveListeYaz(liste_basi->sonraki_eleman);
+        ListeTerstenRecursiveYaz(liste_basi->sonraki_eleman);
         printf("%3d", liste_basi->deger);
     }
 
@@ -391,7 +418,7 @@ void ListeTersCevir(BagliListe** liste_basi)
     return;
 }
 
-int DegerlerArdisikMi(BagliListe* liste_basi, int ilk_deger, int ikinci_deger)
+int ListeDegerlerArdisikMi(BagliListe* liste_basi, int ilk_deger, int ikinci_deger)
 {
     BagliListe* ilk_eleman = liste_basi;
 
@@ -436,10 +463,10 @@ int main()
 {
     int cevrilecek_dizi[] = {5,1,6,4,25,0,27,90,3};
 
-    BagliListe* liste = DiziyiListeYap(cevrilecek_dizi, 9);
+    BagliListe* liste = ListeDizidenCevir(cevrilecek_dizi, 9);
     BagliListe* liste2 = NULL;
     ListeYazdir(liste);
-    TekCiftListeBol(&liste, &liste2);
+    ListeTekCiftBol(&liste, &liste2);
     ListeYazdir(liste);
     ListeYazdir(liste2);
 }
