@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Matrisler.cpp">
+    <ClCompile Include="AVL Ağaçları.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
