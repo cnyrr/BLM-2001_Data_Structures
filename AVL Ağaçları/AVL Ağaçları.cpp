@@ -87,8 +87,8 @@ void AVLSagRotasyon(AVL** dugum)
 	(gecici)->sol_eleman = (*dugum)->sag_eleman;
 	// Yerine gelen düğümün sağı, sağa giden düğüme işaret etsin.
 	(*dugum)->sag_eleman = gecici;
-	// Yükseklik güncelle.
-	gecici->yukseklik = gecici->yukseklik - 2;
+	AVLYukseklikGuncelle(gecici);
+	AVLYukseklikGuncelle(*dugum);
 	return;
 }
 
@@ -102,8 +102,8 @@ void AVLSolRotasyon(AVL** dugum)
 	(gecici)->sag_eleman = (*dugum)->sol_eleman;
 	// Yerine gelen düğümün solu, sola giden düğüme işaret etsin.
 	(*dugum)->sol_eleman = gecici;
-	// Yükseklik güncelle.
-	gecici->yukseklik = gecici->yukseklik - 2;
+	AVLYukseklikGuncelle(gecici);
+	AVLYukseklikGuncelle(*dugum);
 	return;
 }
 
@@ -130,11 +130,9 @@ void AVLDugumEkle(AVL** kok, int deger)
 	{
 		return;
 	}
-	
 
 	AVLYukseklikGuncelle(*kok);
 	denge = AVLDengeHesapla(*kok);
-
 	
 	if (denge < -1 && AVLDengeHesapla((*kok)->sag_eleman) < 0)
 	{
@@ -149,7 +147,9 @@ void AVLDugumEkle(AVL** kok, int deger)
 	}
 	else if (denge > 1 && AVLDengeHesapla((*kok)->sol_eleman) < 0)
 	{
-		printf("su an islev olmamali!");
+		printf("Sol-sag rotasyon yapildi.\n");
+		AVLSolRotasyon(&((*kok)->sol_eleman));
+		AVLSagRotasyon(kok);
 	}
 	else if (denge > 1 && AVLDengeHesapla((*kok)->sol_eleman) > 0)
 	{
@@ -175,38 +175,15 @@ void AVLPreOrder(AVL* dugum)
 int main()
 {
 	AVL* kok = AVLDugumOlustur(100);
-	AVLPreOrder(kok);
-	printf("\n");
-	AVLDugumEkle(&kok, 50);
-	AVLPreOrder(kok);
-	printf("\n");
 	AVLDugumEkle(&kok, 200);
-	AVLPreOrder(kok);
-	printf("\n");
-	AVLDugumEkle(&kok, 25);
-	AVLPreOrder(kok);
-	printf("\n");
-	AVLDugumEkle(&kok, 75);
-	AVLPreOrder(kok);
-	printf("\n");
-	AVLDugumEkle(&kok, 125);
-	AVLPreOrder(kok);
-	printf("\n");
+	AVLDugumEkle(&kok, 350);
 	AVLDugumEkle(&kok, 300);
 	AVLPreOrder(kok);
 	printf("\n");
-	AVLDugumEkle(&kok, 400);
+	AVLDugumEkle(&kok, 345);
 	AVLPreOrder(kok);
 	printf("\n");
-	AVLDugumEkle(&kok, 500);
-	printf("\n### Deger:Yukseklik:Denge ###\n");
-	AVLPreOrder(kok);
-	printf("\n");
-	AVLDugumEkle(&kok, 10);
-	AVLPreOrder(kok);
-	printf("\n");
-	AVLDugumEkle(&kok, 5);
-	printf("\n### Deger:Yukseklik:Denge ###\n");
+	AVLDugumEkle(&kok, 330);
 	AVLPreOrder(kok);
 	printf("\n");
 }
