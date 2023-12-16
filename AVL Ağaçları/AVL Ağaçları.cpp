@@ -26,25 +26,21 @@ struct AVL* AVLDugumOlustur(int deger)
 
 int AVLDengeHesapla(AVL* dugum)
 {
-	if (dugum == NULL)
+	if (dugum == NULL || dugum->sol_eleman == NULL && dugum->sag_eleman == NULL)
 	{
 		return 0;
 	}
-	else if (dugum->sol_eleman != NULL && dugum->sag_eleman != NULL)
-	{
-		return dugum->sol_eleman->yukseklik - dugum->sag_eleman->yukseklik;
-	}
-	else if (dugum->sol_eleman != NULL)
+	else if (dugum->sag_eleman == NULL)
 	{
 		return dugum->sol_eleman->yukseklik;
 	}
-	else if (dugum->sag_eleman != NULL)
+	else if (dugum->sol_eleman == NULL)
 	{
 		return - dugum->sag_eleman->yukseklik;
 	}
 	else
 	{
-		return 0;
+		return dugum->sol_eleman->yukseklik - dugum->sag_eleman->yukseklik;
 	}
 }
 
@@ -81,16 +77,33 @@ void AVLYukseklikGuncelle(AVL* dugum)
 	return;
 }
 
-void AVLSolRotasyon(AVL*** dugum)
+void AVLSagRotasyon(AVL** dugum)
+{
+	// Sağa gidecek düğümün adresini tut.
+	AVL* gecici = *dugum;
+	// Sağa gidecek düğüme işaretçiyi, sol düğümü yap.
+	*dugum = (*dugum)->sol_eleman;
+	// Sağa gidecek düğümün sağı, yerine gelen düğümün sağına işaret etsin.
+	(gecici)->sol_eleman = (*dugum)->sag_eleman;
+	// Yerine gelen düğümün sağı, sağa giden düğüme işaret etsin.
+	(*dugum)->sag_eleman = gecici;
+	// Yükseklik güncelle.
+	gecici->yukseklik = gecici->yukseklik - 2;
+	return;
+}
+
+void AVLSolRotasyon(AVL** dugum)
 {
 	// Sola gidecek düğümün adresini tut.
-	AVL* gecici = **dugum;
+	AVL* gecici = *dugum;
 	// Sola gidecek düğüme işaretçiyi, sağ düğümü yap.
-	**dugum = (**dugum)->sag_eleman;
+	*dugum = (*dugum)->sag_eleman;
 	// Sola gidecek düğümün sağı, yerine gelen düğümün soluna işaret etsin.
-	(gecici)->sag_eleman = (**dugum)->sol_eleman;
+	(gecici)->sag_eleman = (*dugum)->sol_eleman;
 	// Yerine gelen düğümün solu, sola giden düğüme işaret etsin.
-	(**dugum)->sol_eleman = gecici;
+	(*dugum)->sol_eleman = gecici;
+	// Yükseklik güncelle.
+	gecici->yukseklik = gecici->yukseklik - 2;
 	return;
 }
 
@@ -123,13 +136,26 @@ void AVLDugumEkle(AVL** kok, int deger)
 	denge = AVLDengeHesapla(*kok);
 
 	
-	if (denge < -1 && deger > (*kok)->sag_eleman->deger)
+	if (denge < -1 && AVLDengeHesapla((*kok)->sag_eleman) < 0)
 	{
-		AVLSolRotasyon(&kok);
+		printf("Sol rotasyon yapildi.\n");
+		AVLSolRotasyon(kok);
 	}
-
-	AVLYukseklikGuncelle((*kok)->sol_eleman);
-	AVLYukseklikGuncelle(*kok);
+	else if (denge < -1 && AVLDengeHesapla((*kok)->sag_eleman) > 0)
+	{
+		printf("Sag-sol rotasyon yapildi.\n");
+		AVLSagRotasyon(&((*kok)->sag_eleman));
+		AVLSolRotasyon(kok);
+	}
+	else if (denge > 1 && AVLDengeHesapla((*kok)->sol_eleman) < 0)
+	{
+		printf("su an islev olmamali!");
+	}
+	else if (denge > 1 && AVLDengeHesapla((*kok)->sol_eleman) > 0)
+	{
+		printf("Sag rotasyon yapildi.\n");
+		AVLSagRotasyon(kok);
+	}
 
 	return;
 }
@@ -140,7 +166,7 @@ void AVLPreOrder(AVL* dugum)
 	{
 		return;
 	}
-	printf("%3d:%2d ", dugum->deger, dugum->yukseklik);
+	printf("%3d:%1d:%1d ", dugum->deger, dugum->yukseklik, AVLDengeHesapla(dugum));
 	AVLPreOrder(dugum->sol_eleman);
 	AVLPreOrder(dugum->sag_eleman);
 	return;
@@ -151,10 +177,36 @@ int main()
 	AVL* kok = AVLDugumOlustur(100);
 	AVLPreOrder(kok);
 	printf("\n");
+	AVLDugumEkle(&kok, 50);
+	AVLPreOrder(kok);
+	printf("\n");
 	AVLDugumEkle(&kok, 200);
 	AVLPreOrder(kok);
 	printf("\n");
+	AVLDugumEkle(&kok, 25);
+	AVLPreOrder(kok);
+	printf("\n");
+	AVLDugumEkle(&kok, 75);
+	AVLPreOrder(kok);
+	printf("\n");
+	AVLDugumEkle(&kok, 125);
+	AVLPreOrder(kok);
+	printf("\n");
 	AVLDugumEkle(&kok, 300);
+	AVLPreOrder(kok);
+	printf("\n");
+	AVLDugumEkle(&kok, 400);
+	AVLPreOrder(kok);
+	printf("\n");
+	AVLDugumEkle(&kok, 500);
+	printf("\n### Deger:Yukseklik:Denge ###\n");
+	AVLPreOrder(kok);
+	printf("\n");
+	AVLDugumEkle(&kok, 10);
+	AVLPreOrder(kok);
+	printf("\n");
+	AVLDugumEkle(&kok, 5);
+	printf("\n### Deger:Yukseklik:Denge ###\n");
 	AVLPreOrder(kok);
 	printf("\n");
 }
