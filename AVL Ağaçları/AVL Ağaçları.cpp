@@ -160,6 +160,92 @@ void AVLDugumEkle(AVL** kok, int deger)
 	return;
 }
 
+void AVLDugumSil(AVL** kok, int deger)
+{
+	int denge;
+
+	if (*kok == NULL)
+	{
+		return;
+	}
+	else if (deger > (*kok)->deger)
+	{
+		AVLDugumSil(&((*kok)->sag_eleman), deger);
+	}
+	else if (deger < (*kok)->deger)
+	{
+		AVLDugumSil(&((*kok)->sol_eleman), deger);
+	}
+	else
+	{
+		AVL* gecici = *kok;
+
+		if ((*kok)->sag_eleman == NULL && (*kok)->sol_eleman == NULL)
+		{
+			free(*kok);
+			*kok = NULL;
+			return;
+		}
+		else if ((*kok)->sag_eleman == NULL)
+		{
+			*kok = (*kok)->sol_eleman;
+			(*kok)->yukseklik++;
+			free(gecici);
+		}
+		else if ((*kok)->sol_eleman == NULL)
+		{
+			*kok = (*kok)->sag_eleman;
+			(*kok)->yukseklik++;
+			free(gecici);
+		}
+		else
+		{
+			AVL* en_kucuk_dugum = (*kok)->sag_eleman;
+			
+			// Değişim için geçici değer.
+			int deger = (*kok)->deger;
+
+			while (en_kucuk_dugum->sol_eleman != NULL)
+			{
+				en_kucuk_dugum = en_kucuk_dugum->sol_eleman;
+			}
+
+			(*kok)->deger = en_kucuk_dugum->deger;
+			en_kucuk_dugum->deger = deger;
+
+			AVLDugumSil(&((*kok)->sag_eleman), deger);
+		}
+	}
+
+	AVLYukseklikGuncelle(*kok);
+	denge = AVLDengeHesapla(*kok);
+
+	if (denge < -1 && AVLDengeHesapla((*kok)->sag_eleman) < 0)
+	{
+		printf("Sol rotasyon yapildi.\n");
+		AVLSolRotasyon(kok);
+	}
+	else if (denge < -1 && AVLDengeHesapla((*kok)->sag_eleman) > 0)
+	{
+		printf("Sag-sol rotasyon yapildi.\n");
+		AVLSagRotasyon(&((*kok)->sag_eleman));
+		AVLSolRotasyon(kok);
+	}
+	else if (denge > 1 && AVLDengeHesapla((*kok)->sol_eleman) < 0)
+	{
+		printf("Sol-sag rotasyon yapildi.\n");
+		AVLSolRotasyon(&((*kok)->sol_eleman));
+		AVLSagRotasyon(kok);
+	}
+	else if (denge > 1 && AVLDengeHesapla((*kok)->sol_eleman) > 0)
+	{
+		printf("Sag rotasyon yapildi.\n");
+		AVLSagRotasyon(kok);
+	}
+
+	return;
+}
+
 void AVLPreOrder(AVL* dugum)
 {
 	if (dugum == NULL)
@@ -184,6 +270,9 @@ int main()
 	AVLPreOrder(kok);
 	printf("\n");
 	AVLDugumEkle(&kok, 330);
+	AVLPreOrder(kok);
+	printf("\n");
+	AVLDugumSil(&kok, 200);
 	AVLPreOrder(kok);
 	printf("\n");
 }
